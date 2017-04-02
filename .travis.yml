@@ -1,0 +1,28 @@
+language: go
+sudo: true
+go:
+- 1.8
+install:
+- curl https://glide.sh/get | sh
+- glide install
+script:
+- go test ./... -v
+after_success:
+- sudo apt-get update
+- sudo apt-get install php5
+- bin/build-all.sh
+- bin/generate_description.sh
+#deploy:
+#  provider: releases
+#  api_key:
+#    secure: RJ9AUkInLh0rJRmRWyxh77zj35dImrLUukUoBAnGIknmqvL9fgj13B59p/9GPRKRbNhA4qnew0RPAL8z4RdNUzYoCmsQtylQznRWQAFKDRZAkdKp6+BPZ5PCXIfddhukWekZ/xGWcRpe4CDhnljzBEOZgo28+uUtQRh60mUydh/y69OkWZbg4rsQBAhsy38//xu7mWAMZWkgKCDB1sJw3J1l0HNQCeSPDM7xt8i8dxuzW2lylxOq3EmHzckCTptAtjx4kUAxlzU4uhCm1Ry2gjySsIc5nKqDo5woeHgJE/Z0jymXzgbkKdHPMGYnVEdmIsrjZEhpwJIuc1Q8OyFEk63UhlZJ6Lx4bQXupLEk4o+Qf/9G0TgzArVvQpsmOSm3U0A0JY3finwJUIZOwefx781A+Grxg7Wd3rJDR9+brt3fx3LE6bteHuE+TMTtsxUHQyqwUR9R0hdyNp1dFqQc5/JGOGYA5Q/6n1InpxPmYvNiLN+BIGxviLxo5UmpSlXY//da8bcRIkd1N+ohso67oSkSc/y5Dl5+/k4EvWA1i0PcXgvtk/p9ruPbUVbb2a1xDhUXRmuo5JxeeeeAv/wVm6wTMtoEY9+s+sxoqFWO5JymSGvS9MRbo7yV040AdClEa2uvVBdcuJNkv5HN4lJHhNS7uyUFPPsgbu9RHrjbvbs=
+#  file:
+#  - out/manifest-generator_darwin_amd64
+#  - out/manifest-generator_linux_386
+#  - out/manifest-generator_linux_amd64
+#  - out/manifest-generator_windows_386.exe
+#  - out/manifest-generator_windows_amd64.exe
+#  - repo-index.yml
+#  on:
+#    tags: true
+#    all_branches: true

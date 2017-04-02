@@ -1,0 +1,14 @@
+package: github.com/orange-cloudfoundry/cf-plugin-sync
+import:
+- package: code.cloudfoundry.org/cli
+  subpackages:
+  - cf/models
+  - cf/ssh/options
+  - plugin
+- package: github.com/ArthurHlt/gominlog
+- package: github.com/cheggaaa/pb
+- package: github.com/rjeczalik/notify
+- package: github.com/urfave/cli
+- package: golang.org/x/crypto
+  subpackages:
+  - ssh

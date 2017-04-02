@@ -1,0 +1,23 @@
+plugins:
+  name: sync
+  description: Synchronize a folder to a container directory. -> https://github.com/orange-cloudfoundry/cf-plugin-sync (CLI v6.7.0+)
+  version: 1.0.0
+  created: %date%
+  updated: %date_updated%
+  company: Orange
+  authors:
+  - name: Arthur Halet
+    homepage: https://github.com/ArthurHlt
+    contact: arthur.halet@orange.com
+  homepage: https://github.com/orange-cloudfoundry/cf-plugin-sync
+  binaries:
+  - platform: osx
+    url: %plugins.homepage%/releases/download/v%plugins.version%/%plugins.name%_darwin_amd64
+  - platform: win64
+    url: %plugins.homepage%/releases/download/v%plugins.version%/%plugins.name%_windows_amd64.exe
+  - platform: win32
+    url: %plugins.homepage%/releases/download/v%plugins.version%/%plugins.name%_windows_386.exe
+  - platform: linux64
+    url: %plugins.homepage%/releases/download/v%plugins.version%/%plugins.name%_linux_amd64
+  - platform: linux32
+    url: %plugins.homepage%/releases/download/v%plugins.version%/%plugins.name%_linux_386
