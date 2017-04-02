@@ -8,7 +8,7 @@ import:
 - package: github.com/ArthurHlt/gominlog
 - package: github.com/cheggaaa/pb
 - package: github.com/rjeczalik/notify
-- package: github.com/urfave/cli
 - package: golang.org/x/crypto
   subpackages:
   - ssh
+- package: gopkg.in/urfave/cli.v1

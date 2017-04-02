@@ -1,5 +1,5 @@
-hash: 57ac82c70ca5564bc8d13d0bf16ff71525b0cee66f953a90d37e6eeb21231c46
-updated: 2017-04-02T18:39:17.637396459+02:00
+hash: 684f7dad242b6db4c48cd05f0cd2a8e68cf1f45816d4f70e39a4411c24604e3a
+updated: 2017-04-02T19:38:28.836534368+02:00
 imports:
 - name: code.cloudfoundry.org/cli
   version: 46032893c53596675860606160c70269882d01c4
@@ -38,8 +38,6 @@ imports:
   - i18n/translation
 - name: github.com/rjeczalik/notify
   version: 41a86457b5eea072a7e6f40bbfaf94c8df41d3aa
-- name: github.com/urfave/cli
-  version: 8ba6f23b6e36d03666a14bd9421f5e3efcb59aca
 - name: golang.org/x/crypto
   version: 459e26527287adbc2adcc5d0d49abff9a5f315a7
   subpackages:
@@ -52,6 +50,8 @@ imports:
   repo: https://go.googlesource.com/sys
   subpackages:
   - unix
+- name: gopkg.in/urfave/cli.v1
+  version: 0bdeddeeb0f650497d603c4ad7b20cfe685682f6
 - name: gopkg.in/yaml.v2
   version: a5b47d31c556af34a302ce5d659e6fea44d90de0
   repo: https://gopkg.in/yaml.v2

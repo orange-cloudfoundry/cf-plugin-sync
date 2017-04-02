@@ -8,7 +8,7 @@ import (
 	"code.cloudfoundry.org/cli/cf/models"
 	"code.cloudfoundry.org/cli/cf/ssh/options"
 	"os"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v1"
 	"errors"
 )
 

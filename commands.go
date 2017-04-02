@@ -1,8 +1,6 @@
 package main
 
-import (
-	"github.com/urfave/cli"
-)
+import "gopkg.in/urfave/cli.v1"
 
 func generateCommand(c *SyncCommand) []cli.Command {
 

@@ -3,7 +3,7 @@ package main
 import (
 	"bytes"
 	"code.cloudfoundry.org/cli/plugin"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v1"
 	"fmt"
 )
 
