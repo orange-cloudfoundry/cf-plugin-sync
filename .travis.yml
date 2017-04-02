@@ -10,7 +10,7 @@ script:
 - echo "notest"
 after_success:
 - sudo apt-get update
-- sudo apt-get install php7.0
+- sudo apt-get install php
 - bin/build-all.sh
 - bin/generate_description.sh
 deploy:
