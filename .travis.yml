@@ -10,7 +10,10 @@ script:
 - echo "notest"
 after_success:
 - sudo apt-get update
-- sudo apt-get install php7
+- sudo apt-get install software-properties-common
+- sudo add-apt-repository ppa:ondrej/php
+- sudo apt-get update
+- sudo apt-get install php7.0
 - bin/build-all.sh
 - bin/generate_description.sh
 deploy:
