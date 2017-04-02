@@ -1,5 +1,6 @@
 plugins:
   name: sync
+  binary_name: cf-plugin-sync
   description: Synchronize a folder to a container directory. -> https://github.com/orange-cloudfoundry/cf-plugin-sync (CLI v6.7.0+)
   version: 1.0.0
   created: %date%
@@ -12,12 +13,13 @@ plugins:
   homepage: https://github.com/orange-cloudfoundry/cf-plugin-sync
   binaries:
   - platform: osx
-    url: %plugins.homepage%/releases/download/v%plugins.version%/%plugins.name%_darwin_amd64
+    url: %plugins.homepage%/releases/download/v%plugins.version%/%plugins.binary_name%_darwin_amd64
+    checksum: 1f5599db7c304037d13bce48bb683dfba06d7b23
   - platform: win64
-    url: %plugins.homepage%/releases/download/v%plugins.version%/%plugins.name%_windows_amd64.exe
+    url: %plugins.homepage%/releases/download/v%plugins.version%/%plugins.binary_name%_windows_amd64.exe
   - platform: win32
-    url: %plugins.homepage%/releases/download/v%plugins.version%/%plugins.name%_windows_386.exe
+    url: %plugins.homepage%/releases/download/v%plugins.version%/%plugins.binary_name%_windows_386.exe
   - platform: linux64
-    url: %plugins.homepage%/releases/download/v%plugins.version%/%plugins.name%_linux_amd64
+    url: %plugins.homepage%/releases/download/v%plugins.version%/%plugins.binary_name%_linux_amd64
   - platform: linux32
-    url: %plugins.homepage%/releases/download/v%plugins.version%/%plugins.name%_linux_386
+    url: %plugins.homepage%/releases/download/v%plugins.version%/%plugins.binary_name%_linux_386

@@ -26,6 +26,9 @@ $data = $yamlarh->parse();
 $binaries = &$data['plugins']['binaries'];
 
 foreach ($binaries as &$binary) {
+    if (!empty($binary['checksum'])) {
+        continue;
+    }
     $path = pathinfo($binary['url'], PATHINFO_BASENAME);
     $checksum = sha1_file(__DIR__ . '/../../out/' . $path);
     $binary['checksum'] = $checksum;
