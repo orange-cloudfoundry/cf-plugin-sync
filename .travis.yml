@@ -12,17 +12,16 @@ after_success:
 - sudo apt-get install php5
 - bin/build-all.sh
 - bin/generate_description.sh
-#deploy:
-#  provider: releases
-#  api_key:
-#    secure: RJ9AUkInLh0rJRmRWyxh77zj35dImrLUukUoBAnGIknmqvL9fgj13B59p/9GPRKRbNhA4qnew0RPAL8z4RdNUzYoCmsQtylQznRWQAFKDRZAkdKp6+BPZ5PCXIfddhukWekZ/xGWcRpe4CDhnljzBEOZgo28+uUtQRh60mUydh/y69OkWZbg4rsQBAhsy38//xu7mWAMZWkgKCDB1sJw3J1l0HNQCeSPDM7xt8i8dxuzW2lylxOq3EmHzckCTptAtjx4kUAxlzU4uhCm1Ry2gjySsIc5nKqDo5woeHgJE/Z0jymXzgbkKdHPMGYnVEdmIsrjZEhpwJIuc1Q8OyFEk63UhlZJ6Lx4bQXupLEk4o+Qf/9G0TgzArVvQpsmOSm3U0A0JY3finwJUIZOwefx781A+Grxg7Wd3rJDR9+brt3fx3LE6bteHuE+TMTtsxUHQyqwUR9R0hdyNp1dFqQc5/JGOGYA5Q/6n1InpxPmYvNiLN+BIGxviLxo5UmpSlXY//da8bcRIkd1N+ohso67oSkSc/y5Dl5+/k4EvWA1i0PcXgvtk/p9ruPbUVbb2a1xDhUXRmuo5JxeeeeAv/wVm6wTMtoEY9+s+sxoqFWO5JymSGvS9MRbo7yV040AdClEa2uvVBdcuJNkv5HN4lJHhNS7uyUFPPsgbu9RHrjbvbs=
-#  file:
-#  - out/manifest-generator_darwin_amd64
-#  - out/manifest-generator_linux_386
-#  - out/manifest-generator_linux_amd64
-#  - out/manifest-generator_windows_386.exe
-#  - out/manifest-generator_windows_amd64.exe
-#  - repo-index.yml
-#  on:
-#    tags: true
-#    all_branches: true
+deploy:
+  provider: releases
+  api_key:
+    secure: Bfw0prOMs9cQoN+6U8iXDoF2aI+15Itmaou4E+06h+1ezNbRrUBW1j5scFl5EuOlH9vWg1natQE4uo5WXAQ4wNX/OHtAxn69GvPFGiljO7NXx7oKucO9btR/q+n4Ol+N7/z4hQiVbvwSZHDO32XQt7MQdpo0oxK151jgDHoTkfZI5IM9XJwq9eQInZdzMLWMpHMoC6yO4nd45NTOA8rDSKJCJK7XDVMgZAWJzx39kHeNuT1eePuUusF3KZEXhTeiwD8igi1hVxFNZBIPsx7/AS9Zuz26UEDoLvnTxEjiy1K0VnVE47/D5tPJQAIJf77IBaRoZRyOfys4fi51EmlQ7RXcb7Jqy/ySwnWw3RauZ/JEuME3T3tCakmPg0ZTUtLXTR4P92WdtwH3s2W75qGckZt7gPa2fhVnyBqGvsQQu9zQxit2PKHZ05ewaXv+RG/2wFHyl8sn6JUxpqi91t3cJYywrW26zD85aj+Q9zdvUFJcEFN3EHoqu8f0XpOq+6u3Tcq9hmyeHDx+4luSvyHvck13cJkl4Gkqh9dVO4BzNyEVwcXLfKRe29gSyodGtZTxipJs5HdIlNTfd5wpKEhIIWvc0ivJee4mR2OQdZyw9oi1ylKhklRBfwTIZCXNtzQXnTNer+cTn6XWlK3ATEwcyiTt44jLbJkjd+vCyRsBJek=
+  file:
+  - out/cf-plugin-sync_darwin_amd64
+  - out/cf-plugin-sync_linux_386
+  - out/cf-plugin-sync_linux_amd64
+  - out/cf-plugin-sync_windows_386.exe
+  - out/cf-plugin-sync_windows_amd64.exe
+  - repo-index.yml
+  on:
+    tags: true
