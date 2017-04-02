@@ -16,6 +16,7 @@ type Sync struct {
 	targetDir      string
 	eventChan      chan notify.EventInfo
 	fileToRenamed  string
+	forceSync      bool
 }
 
 func NewSync(containerFiler *ContainerFiler, sourceDir, targetDir string) (*Sync, error) {
@@ -75,11 +76,11 @@ func (s *Sync) syncFolder() error {
 	if err != nil {
 		return err
 	}
-	if !dirIsEmpty {
+	if !dirIsEmpty && !s.forceSync {
 		logger.Info("No need to synchronize from remote, directory not empty.")
 		return nil
 	}
-	logger.Info("Synchronizing folder '%s' into the remote folder '%s' ...", s.sourceDir, s.targetDir)
+	logger.Info("Synchronizing folder '%s' from the remote folder '%s' ...", s.sourceDir, s.targetDir)
 	err = s.containerFiler.CopyRemoteFolder(s.sourceDir, s.targetDir)
 	if err != nil {
 		return err
@@ -188,5 +189,9 @@ func (s Sync) ToRemotePath(path string) string {
 	if !strings.HasSuffix(rmtPath, "/") {
 		rmtPath += "/"
 	}
+	rmtPath = strings.Replace(rmtPath, "\\", "/", -1)
 	return rmtPath + s.TrimPath(path)
+}
+func (s *Sync) SetForceSync(forceSync bool) {
+	s.forceSync = forceSync
 }

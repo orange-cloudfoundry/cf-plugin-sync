@@ -20,3 +20,4 @@ then
 fi
 
 php "$melody_file" run "$CURRENTDIR/bin/scripts/generatePluginDescription.php"
+cat repo-index.yml

@@ -26,7 +26,8 @@ DESCRIPTION:
 
 OPTIONS:
    --source value, -s value  Source directory to sync file from container, if empty it will populated with data from container.
-   --target value, -t value  Directory which will be sync from container
+   --target value, -t value  Directory which will be sync from container.
+   --force-sync, -f          Resynchronize files from remote to source even if source folder is not empty.
 ```
 
 ## Tips

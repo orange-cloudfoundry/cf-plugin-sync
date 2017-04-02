@@ -16,7 +16,11 @@ func generateCommand(c *SyncCommand) []cli.Command {
 				},
 				cli.StringFlag{
 					Name: "target, t",
-					Usage: "Directory which will be sync from container",
+					Usage: "Directory which will be sync from container.",
+				},
+				cli.BoolFlag{
+					Name: "force-sync, f",
+					Usage: "Resynchronize files from remote to source even if source folder is not empty.",
 				},
 			},
 			Description: "Synchronize a folder to a container directory by default a sync-appname folder will be created in current dir and target dir will be set to ~/app",

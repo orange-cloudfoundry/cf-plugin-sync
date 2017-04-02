@@ -44,6 +44,7 @@ func (s SyncCommand) getTargetDir(c *cli.Context) string {
 	return DEFAULT_ROOT_TARGET_FOLDER + targetDir
 }
 func (s *SyncCommand) Sync(c *cli.Context) error {
+	forceSync := c.Bool("force-sync")
 	appName := c.Args().First()
 	if appName == "" {
 		return errors.New("You must pass an app name.")
@@ -122,5 +123,6 @@ func (s *SyncCommand) Sync(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+	sync.SetForceSync(forceSync)
 	return sync.Run()
 }

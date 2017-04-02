@@ -14,7 +14,7 @@ plugins:
   binaries:
   - platform: osx
     url: %plugins.homepage%/releases/download/v%plugins.version%/%plugins.binary_name%_darwin_amd64
-    checksum: 1f5599db7c304037d13bce48bb683dfba06d7b23
+    checksum: a28078c6800f08793745f6a918f2da0d1657100d
   - platform: win64
     url: %plugins.homepage%/releases/download/v%plugins.version%/%plugins.binary_name%_windows_amd64.exe
   - platform: win32

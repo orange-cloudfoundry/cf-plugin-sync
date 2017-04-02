@@ -5,6 +5,7 @@ import (
 	"code.cloudfoundry.org/cli/plugin"
 	"gopkg.in/urfave/cli.v1"
 	"fmt"
+	"os"
 )
 
 var version_major int = 1
@@ -33,8 +34,13 @@ func (c *SyncPlugin) Run(cliConnection plugin.CliConnection, args []string) {
 	app.Version = fmt.Sprintf("%d.%d.%d", version_major, version_minor, version_build)
 	app.Usage = "Synchronize a folder to a container directory."
 	app.Commands = generateCommand(c.syncCommand)
+	app.ErrWriter = os.Stderr
+	app.Writer = os.Stdout
 	finalArgs := append([]string{APP_NAME}, args...)
-	app.Run(finalArgs)
+	err := app.Run(finalArgs)
+	if err != nil {
+		logger.Error(err.Error())
+	}
 }
 func (c *SyncPlugin) GetMetadata() plugin.PluginMetadata {
 
