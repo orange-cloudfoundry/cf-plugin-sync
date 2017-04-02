@@ -3,6 +3,7 @@ sudo: true
 go:
 - 1.8
 install:
+- mkdir $GOPATH/bin
 - curl https://glide.sh/get | sh
 - glide install
 script:
