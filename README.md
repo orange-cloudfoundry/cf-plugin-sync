@@ -1,15 +1,15 @@
 # cf-plugin-sync
 
-This is a Cloud Foundry cli plugin which give the possibility to synchronize a local folder to a remote folder inside a 
+This is a Cloud Foundry cli plugin which gives the possibility to synchronize a local folder to a remote folder inside a 
 Cloud Foundry app.
  
-Like this you only need to modify file inside your local folder to see changes in your app.
+This way you only need to modify files inside your local folder to see changes in your app.
 
 **Note**: 
 - It use `scp` to download files from app, `scp` is not available on windows. 
 Please windows users install [winscp](https://winscp.net) and set the environment variable `SCP_PATH` pointing to your `winscp.exe`
 - This plugin was made only for developing purpose, do not use on an app in production (ssh should be disabled in this context)
-- If you ran multiple instance of your app only the first instance (index 0) will be altered.
+- If you run multiple instances of your app only the first instance (index 0) will be altered.
 
 ## Installation from release binaries
 
@@ -38,5 +38,5 @@ OPTIONS:
 - If no source folder is passed, the plugin will create a folder named `sync-appname`
 - Root folder inside app is `~/app`
 - If the source folder is not empty, data will not be resynchronized
-- Some buildpacks put a lot of binaries in the `~/app` and that's can be long to download, prefer set a final target 
+- Some buildpacks put a lot of binaries in the `~/app` and that can be long to download, prefer setting up a final target 
 with the parameter `--target`, example with `php-buildpack`: `cf sync --target="htdocs"` (final target will be `~/app/htdocs`)
