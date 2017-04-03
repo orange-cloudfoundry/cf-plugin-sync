@@ -38,5 +38,5 @@ OPTIONS:
 - If no source folder is passed, the plugin will create a folder named `sync-appname`
 - Root folder inside app is `~/app`
 - If the source folder is not empty, data will not be resynchronized
-- Some buildpacks put a lot of binaries in the `~/app` and that's can be long to download, prefer setting a final target 
+- Some buildpacks put a lot of binaries in the `~/app` and that can be long to download, prefer setting up a final target 
 with the parameter `--target`, example with `php-buildpack`: `cf sync --target="htdocs"` (final target will be `~/app/htdocs`)
