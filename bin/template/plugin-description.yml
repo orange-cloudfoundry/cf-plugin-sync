@@ -1,10 +1,10 @@
 plugins:
   name: sync
   binary_name: cf-plugin-sync
-  description: Synchronize a folder to a container directory. -> https://github.com/orange-cloudfoundry/cf-plugin-sync (CLI v6.7.0+)
-  version: 1.1.0
-  created: %date%
-  updated: %date_updated%
+  description: Synchronize a local folder to a remote folder inside a Cloud Foundry app to make changes on the fly
+  version: 1.1.1
+  created: %date%T00:00:00Z
+  updated: %date_updated%T00:00:00Z
   company: Orange
   authors:
   - name: Arthur Halet
@@ -14,7 +14,7 @@ plugins:
   binaries:
   - platform: osx
     url: %plugins.homepage%/releases/download/v%plugins.version%/%plugins.binary_name%_darwin_amd64
-    checksum: 695d4a4c5f5942c07cffc133796ebf5eb58c94d6
+    checksum: 1268126eb126592e8b1ed9a1ddac951e9b87c4bb
   - platform: win64
     url: %plugins.homepage%/releases/download/v%plugins.version%/%plugins.binary_name%_windows_amd64.exe
   - platform: win32

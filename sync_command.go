@@ -10,11 +10,12 @@ import (
 	"os"
 	"gopkg.in/urfave/cli.v1"
 	"errors"
+	"path/filepath"
 )
 
 const (
 	DEFAULT_SYNC_FOLDER = "sync"
-	DEFAULT_ROOT_TARGET_FOLDER = "~/app"
+	DEFAULT_ROOT_TARGET_FOLDER = "app"
 )
 
 type SyncCommand struct {
@@ -26,12 +27,26 @@ type SshInfo struct {
 	AppSSHHostKeyFingerprint string `json:"app_ssh_host_key_fingerprint"`
 }
 
-func (s SyncCommand) getSourceDir(c *cli.Context, appName string) string {
+func (s SyncCommand) getSourceDir(c *cli.Context, appName string) (string, error) {
 	sourceDir := c.String("source")
 	if sourceDir == "" {
 		sourceDir = "./" + DEFAULT_SYNC_FOLDER + "-" + appName
 	}
-	return sourceDir
+	sourceDir, err := filepath.Abs(sourceDir)
+	if err != nil {
+		return "", err
+	}
+	dirExists, err := FileExists(sourceDir)
+	if err != nil {
+		return "", err
+	}
+	if !dirExists {
+		err = os.MkdirAll(sourceDir, 0755)
+		if err != nil {
+			return "", err
+		}
+	}
+	return sourceDir, nil
 }
 func (s SyncCommand) getTargetDir(c *cli.Context) string {
 	targetDir := c.String("target")
@@ -49,8 +64,15 @@ func (s *SyncCommand) Sync(c *cli.Context) error {
 	if appName == "" {
 		return errors.New("You must pass an app name.")
 	}
-	sourceDir := s.getSourceDir(c, appName)
+	sourceDir, err := s.getSourceDir(c, appName)
+	if err != nil {
+		return err
+	}
 	targetDir := s.getTargetDir(c)
+	syncIgnore, err := NewSyncIgnore(sourceDir, targetDir)
+	if err != nil {
+		return err
+	}
 	logger.Info("Retrieving information about your app ...")
 	data, err := s.cliConnection.CliCommandWithoutTerminalOutput("curl", "/v2/info")
 	if err != nil {
@@ -117,7 +139,7 @@ func (s *SyncCommand) Sync(c *cli.Context) error {
 
 	go keepalive(secureShell.secureClient.Conn(), time.NewTicker(keepAliveInterval), keepaliveStopCh)
 
-	containerFiler, err := NewContainerFiler(secureShell.secureClient)
+	containerFiler, err := NewContainerFiler(secureShell.secureClient, syncIgnore)
 	if err != nil {
 		return err
 	}

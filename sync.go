@@ -19,31 +19,18 @@ type Sync struct {
 }
 
 func NewSync(containerFiler ContainerFiler, sourceDir, targetDir string) (*Sync, error) {
-	dir, err := filepath.Abs(sourceDir)
-	if err != nil {
-		return nil, err
-	}
-	dirExists, err := fileExists(dir)
-	if err != nil {
-		return nil, err
-	}
-	if !dirExists {
-		err = os.MkdirAll(dir, 0755)
-		if err != nil {
-			return nil, err
-		}
-	}
-	fi, err := os.Stat(dir)
+
+	fi, err := os.Stat(sourceDir)
 	if err != nil {
 		return nil, err
 	}
 	if !fi.IsDir() {
 		return nil, errors.New("You must pass a directory, not a file in source dir")
 	}
-	dir = strings.TrimSuffix(dir, "/")
+	sourceDir = strings.TrimSuffix(sourceDir, "/")
 	return &Sync{
 		containerFiler: containerFiler,
-		sourceDir: dir,
+		sourceDir: sourceDir,
 		targetDir: targetDir,
 		eventChan: make(chan notify.EventInfo, 1),
 	}, nil
@@ -100,16 +87,7 @@ func (s Sync) DirIsEmpty(name string) (bool, error) {
 	}
 	return false, err
 }
-func fileExists(path string) (bool, error) {
-	_, err := os.Stat(path)
-	if err == nil {
-		return true, nil
-	}
-	if os.IsNotExist(err) {
-		return false, nil
-	}
-	return true, err
-}
+
 func (s Sync) getFile(event notify.EventInfo) (*os.File, os.FileInfo, error) {
 	stat, err := os.Stat(event.Path())
 	if err != nil {
@@ -161,7 +139,7 @@ func (s *Sync) Create(event notify.EventInfo) error {
 	}
 }
 func (s *Sync) Rename(event notify.EventInfo) error {
-	exists, err := fileExists(event.Path())
+	exists, err := FileExists(event.Path())
 	if err != nil {
 		return err
 	}

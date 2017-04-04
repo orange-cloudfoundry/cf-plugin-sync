@@ -12,24 +12,37 @@ import (
 )
 
 type ContainerFilerSftp struct {
-	client *sftp.Client
-	writer io.Writer
+	client     *sftp.Client
+	writer     io.Writer
+	syncIgnore *SyncIgnore
 }
 
-func NewContainerFiler(client *SecureClient) (ContainerFiler, error) {
+func NewContainerFiler(client *SecureClient, syncIgnore *SyncIgnore) (ContainerFiler, error) {
 	sftpClient, err := sftp.NewClient(client.Client())
 	if err != nil {
 		return nil, err
 	}
 	return &ContainerFilerSftp{
 		client: sftpClient,
+		syncIgnore: syncIgnore,
 	}, nil
 }
 func (f ContainerFilerSftp) CopyRemoteFolder(sourceDir, targetDir string) error {
-	targetDir = f.trimHome(targetDir)
+	targetDir = strings.TrimSuffix(targetDir, "/")
 	walker := f.client.Walk(targetDir)
 	for walker.Step() {
-		if walker.Path() == targetDir || walker.Stat().IsDir() {
+		if walker.Path() == targetDir {
+			continue
+		}
+		matchIgnore := f.syncIgnore.Match(walker.Path(), walker.Stat().IsDir())
+		if  matchIgnore && walker.Stat().IsDir(){
+			walker.SkipDir()
+			continue
+		}
+		if matchIgnore {
+			continue
+		}
+		if walker.Stat().IsDir() {
 			continue
 		}
 		if err := walker.Err(); err != nil {
@@ -58,6 +71,8 @@ func (f *ContainerFilerSftp) downloadFile(sourceDir, targetDir, pathfile string)
 	if err != nil {
 		return err
 	}
+	defer localFile.Close()
+
 	var remoteFile io.Reader
 	remoteFile, err = f.client.Open(pathfile)
 	if err != nil {
@@ -91,11 +106,7 @@ func (f ContainerFilerSftp) toLocalPath(sourceDir, targetDir, pathfile string) s
 	pathfile = strings.TrimPrefix(pathfile, targetDir)
 	return sourceDir + filepath.FromSlash(pathfile)
 }
-func (f ContainerFilerSftp) trimHome(path string) string {
-	return strings.TrimPrefix(path, "~/")
-}
 func (f ContainerFilerSftp) CopyContent(reader io.Reader, length int64, remotePath string, permissions os.FileMode) error {
-	remotePath = f.trimHome(remotePath)
 	if f.writer != nil {
 		bar := pb.New64(length).SetUnits(pb.U_BYTES)
 		bar.Output = f.writer
@@ -107,6 +118,7 @@ func (f ContainerFilerSftp) CopyContent(reader io.Reader, length int64, remotePa
 	if err != nil {
 		return err
 	}
+	defer remoteFile.Close()
 	_, err = io.Copy(remoteFile, reader)
 	if err != nil {
 		return err
@@ -114,7 +126,6 @@ func (f ContainerFilerSftp) CopyContent(reader io.Reader, length int64, remotePa
 	return f.client.Chmod(remotePath, permissions)
 }
 func (f ContainerFilerSftp) CreateFolders(remotePath, dir string) error {
-	remotePath = f.trimHome(remotePath)
 	if !strings.HasSuffix(remotePath, "/") {
 		remotePath = remotePath + "/"
 	}
@@ -137,7 +148,6 @@ func (f ContainerFilerSftp) CreateFolders(remotePath, dir string) error {
 	return nil
 }
 func (f ContainerFilerSftp) Delete(remotePath string) error {
-	remotePath = f.trimHome(remotePath)
 	logger.Info("Deleting path '%s' ...", remotePath)
 	stat, err := f.client.Stat(remotePath)
 	if err != nil {
@@ -155,8 +165,6 @@ func (f ContainerFilerSftp) Delete(remotePath string) error {
 	return nil
 }
 func (f ContainerFilerSftp) Rename(srcRmtPath, trtRmtPath string) error {
-	srcRmtPath = f.trimHome(srcRmtPath)
-	trtRmtPath = f.trimHome(trtRmtPath)
 	logger.Info("Moving path '%s' to '%s' ...", srcRmtPath, trtRmtPath)
 	err := f.client.Rename(srcRmtPath, trtRmtPath)
 	if err != nil {

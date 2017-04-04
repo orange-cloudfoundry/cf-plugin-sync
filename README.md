@@ -31,10 +31,22 @@ OPTIONS:
    --force-sync, -f          Resynchronize files from remote to source even if source folder is not empty.
 ```
 
+## .syncignored
+
+you can ignore files and directories from remote app by adding a `.syncignore` in the syle of a `.gitignore` file in source folder (or working directory). 
+
+Example for php-buildpack:
+
+`.syncignored` file:
+```
+/.*
+/httpd
+/php
+```
+
 ## Tips
 
 - If no source folder is passed, the plugin will create a folder named `sync-appname`
 - Root folder inside app is `~/app`
 - If the source folder is not empty, data will not be resynchronized
-- Some buildpacks put a lot of binaries in the `~/app` and that can be long to download, prefer setting up a final target 
-with the parameter `--target`, example with `php-buildpack`: `cf sync --target="htdocs"` (final target will be `~/app/htdocs`)
+

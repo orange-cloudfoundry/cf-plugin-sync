@@ -1,8 +1,8 @@
-hash: 4846a66041a5130c0a1601b47eee2cab64728d1519c8ba2117470a7382813b8d
-updated: 2017-04-04T02:06:58.63374057+02:00
+hash: f8ec76622ec97f9a2176019f048991c8e2dbcca76f99bb5abbf25e37cf2f2641
+updated: 2017-04-04T03:45:25.559770849+02:00
 imports:
 - name: code.cloudfoundry.org/cli
-  version: b9e98abf28812ef84a211237be779f11f435c8cc
+  version: 62896646ffa396fa0bcbe6a1a890dbe1f3c7af88
   subpackages:
   - cf/flags
   - cf/formatters
@@ -30,6 +30,8 @@ imports:
 - name: github.com/mattn/go-runewidth
   version: 14207d285c6c197daabb5c9793d63e7af9ab2d50
   repo: https://github.com/mattn/go-runewidth
+- name: github.com/monochromegane/go-gitignore
+  version: 38717d0a108ca0e5af632cd6845ca77d45b50729
 - name: github.com/nicksnyder/go-i18n
   version: f757c9f9b69c16ff69d38dbf224be28a7b6537bb
   repo: https://github.com/nicksnyder/go-i18n

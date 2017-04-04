@@ -13,3 +13,4 @@ import:
   subpackages:
   - ssh
 - package: gopkg.in/urfave/cli.v1
+- package: github.com/monochromegane/go-gitignore
