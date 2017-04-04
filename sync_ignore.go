@@ -79,5 +79,8 @@ func (i *SyncIgnore) Load() error {
 	return nil
 }
 func (i SyncIgnore) Match(pathfile string, isDir bool) bool {
+	if i.ignoreMatcher == nil {
+		return false
+	}
 	return i.ignoreMatcher.Match(pathfile, isDir)
 }
