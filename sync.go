@@ -6,12 +6,11 @@ import (
 	"os"
 	"errors"
 	"strings"
-	"strconv"
 	"io"
 )
 
 type Sync struct {
-	containerFiler *ContainerFiler
+	containerFiler ContainerFiler
 	sourceDir      string
 	targetDir      string
 	eventChan      chan notify.EventInfo
@@ -19,7 +18,7 @@ type Sync struct {
 	forceSync      bool
 }
 
-func NewSync(containerFiler *ContainerFiler, sourceDir, targetDir string) (*Sync, error) {
+func NewSync(containerFiler ContainerFiler, sourceDir, targetDir string) (*Sync, error) {
 	dir, err := filepath.Abs(sourceDir)
 	if err != nil {
 		return nil, err
@@ -143,7 +142,7 @@ func (s *Sync) Write(event notify.EventInfo) error {
 	return s.containerFiler.CopyContent(f,
 		stat.Size(),
 		s.ToRemotePath(event.Path()),
-		"0" + strconv.FormatUint(uint64(stat.Mode()), 8),
+		stat.Mode(),
 	)
 }
 func (s *Sync) Create(event notify.EventInfo) error {
@@ -157,7 +156,7 @@ func (s *Sync) Create(event notify.EventInfo) error {
 		return s.containerFiler.CopyContent(f,
 			stat.Size(),
 			s.ToRemotePath(event.Path()),
-			"0" + strconv.FormatUint(uint64(stat.Mode()), 8),
+			stat.Mode(),
 		)
 	}
 }
@@ -180,16 +179,16 @@ func (s *Sync) Rename(event notify.EventInfo) error {
 }
 func (s Sync) TrimPath(path string) string {
 	path = strings.TrimPrefix(path, s.sourceDir)
-	path = strings.Replace(path, "\\", "/", -1)
+	path = filepath.ToSlash(path)
 	path = strings.TrimPrefix(path, "/")
 	return path
 }
 func (s Sync) ToRemotePath(path string) string {
-	rmtPath := filepath.Dir(s.targetDir)
+	rmtPath := s.targetDir
 	if !strings.HasSuffix(rmtPath, "/") {
 		rmtPath += "/"
 	}
-	rmtPath = strings.Replace(rmtPath, "\\", "/", -1)
+	rmtPath = filepath.ToSlash(rmtPath)
 	return rmtPath + s.TrimPath(path)
 }
 func (s *Sync) SetForceSync(forceSync bool) {

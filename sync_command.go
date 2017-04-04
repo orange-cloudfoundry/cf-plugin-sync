@@ -70,7 +70,7 @@ func (s *SyncCommand) Sync(c *cli.Context) error {
 		return err
 	}
 	logger.Info("Finished retrieving information about your app.\n")
-	logger.Info("Authenticating for ssh ...")
+	logger.Info("Authenticating through UAA for ssh ...")
 	data, err = s.cliConnection.CliCommandWithoutTerminalOutput("ssh-code")
 	if err != nil {
 		return err
@@ -117,8 +117,11 @@ func (s *SyncCommand) Sync(c *cli.Context) error {
 
 	go keepalive(secureShell.secureClient.Conn(), time.NewTicker(keepAliveInterval), keepaliveStopCh)
 
-	containerFiler := NewContainerFiler(secureShell.secureClient)
-	containerFiler.OutWriter = os.Stdout
+	containerFiler, err := NewContainerFiler(secureShell.secureClient)
+	if err != nil {
+		return err
+	}
+	containerFiler.SetWriter(os.Stdout)
 	sync, err := NewSync(containerFiler, sourceDir, targetDir)
 	if err != nil {
 		return err

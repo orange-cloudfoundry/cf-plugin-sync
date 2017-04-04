@@ -21,7 +21,7 @@ $date_updated = date('Y-m-d');
 
 $yamlarh = new Yamlarh($template);
 $data = $yamlarh->parse();
-
+unset($data['binary_name']);
 
 $binaries = &$data['plugins']['binaries'];
 

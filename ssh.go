@@ -293,6 +293,9 @@ func (sc *SecureClient) Close() error {
 func (sc *SecureClient) Conn() ssh.Conn {
 	return sc.client.Conn
 }
+func (sc *SecureClient) Client() *ssh.Client {
+	return sc.client
+}
 func (sc *SecureClient) Wait() error {
 	return sc.client.Wait()
 }
