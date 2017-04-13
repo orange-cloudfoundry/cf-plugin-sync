@@ -2,7 +2,7 @@ plugins:
   name: sync
   binary_name: cf-plugin-sync
   description: Synchronize a local folder to a remote folder inside a Cloud Foundry app to make changes on the fly
-  version: 1.1.1
+  version: 1.2.0
   created: %date%T00:00:00Z
   updated: %date_updated%T00:00:00Z
   company: Orange
@@ -14,7 +14,7 @@ plugins:
   binaries:
   - platform: osx
     url: %plugins.homepage%/releases/download/v%plugins.version%/%plugins.binary_name%_darwin_amd64
-    checksum: b6bbd4657a105ab03da14972e0f7719f16e166dd
+    checksum: 9c5a470dfe482057e4b03e7a4b0686747558df7d
   - platform: win64
     url: %plugins.homepage%/releases/download/v%plugins.version%/%plugins.binary_name%_windows_amd64.exe
   - platform: win32

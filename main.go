@@ -9,8 +9,8 @@ import (
 )
 
 var version_major int = 1
-var version_minor int = 1
-var version_build int = 1
+var version_minor int = 2
+var version_build int = 0
 var commandPluginHelpUsage = `   {{.HelpName}}cf sync{{if .Flags}} [command options]{{end}} {{if .ArgsUsage}}{{.ArgsUsage}}{{else}}[arguments...]{{end}}{{if .Description}}
 DESCRIPTION:
    {{.Description}}{{end}}{{if .Flags}}
