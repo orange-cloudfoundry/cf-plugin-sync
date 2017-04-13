@@ -7,6 +7,7 @@ import (
 	"errors"
 	"strings"
 	"io"
+	"strconv"
 )
 
 type Sync struct {
@@ -15,8 +16,11 @@ type Sync struct {
 	targetDir      string
 	eventChan      chan notify.EventInfo
 	fileToRenamed  string
+	swapping       bool
 	forceSync      bool
 }
+
+var ignoredExts []string = []string{"swp", "swx"}
 
 func NewSync(containerFiler ContainerFiler, sourceDir, targetDir string) (*Sync, error) {
 
@@ -32,7 +36,7 @@ func NewSync(containerFiler ContainerFiler, sourceDir, targetDir string) (*Sync,
 		containerFiler: containerFiler,
 		sourceDir: sourceDir,
 		targetDir: targetDir,
-		eventChan: make(chan notify.EventInfo, 1),
+		eventChan: make(chan notify.EventInfo, 50),
 	}, nil
 }
 
@@ -41,7 +45,7 @@ func (s *Sync) Run() error {
 	if err != nil {
 		return err
 	}
-	logger.Info("Start watching for change in folder '%s'\n", s.sourceDir)
+	logger.Info("Start watching for change in folder '%s'\n", TruncatePath(s.sourceDir))
 	if err := notify.Watch(s.sourceDir + "/...", s.eventChan, notify.Remove, notify.Create, notify.Write, notify.Rename); err != nil {
 		return err
 	}
@@ -49,13 +53,29 @@ func (s *Sync) Run() error {
 
 	// Block until an event is received.
 	for ei := range s.eventChan {
-		logger.Info("Received event: '%s' for file '%s'", ei.Event().String(), ei.Path())
+		if s.isIgnored(ei.Path()) {
+			continue
+		}
+		logger.Info("Received event: '%s' for file '%s'", ei.Event().String(), TruncatePath(ei.Path()))
 		err = s.action(ei)
 		if err != nil {
 			logger.Error("Event has errored: " + err.Error())
 		}
 	}
 	return nil
+}
+func (s Sync) isIgnored(path string) bool {
+	ext := filepath.Ext(path)
+	for _, ignoredExt := range ignoredExts {
+		if ext == "." + ignoredExt {
+			return true
+		}
+	}
+	_, err := strconv.Atoi(filepath.Base(path))
+	if err == nil {
+		return true
+	}
+	return false
 }
 func (s *Sync) syncFolder() error {
 	dirIsEmpty, err := s.DirIsEmpty(s.sourceDir)
@@ -66,7 +86,7 @@ func (s *Sync) syncFolder() error {
 		logger.Info("No need to synchronize from remote, directory not empty.")
 		return nil
 	}
-	logger.Info("Synchronizing folder '%s' from the remote folder '%s' ...", s.sourceDir, s.targetDir)
+	logger.Info("Synchronizing folder '%s' from the remote folder '%s' ...", TruncatePath(s.sourceDir), TruncatePath(s.targetDir))
 	err = s.containerFiler.CopyRemoteFolder(s.sourceDir, s.targetDir)
 	if err != nil {
 		return err
@@ -88,12 +108,12 @@ func (s Sync) DirIsEmpty(name string) (bool, error) {
 	return false, err
 }
 
-func (s Sync) getFile(event notify.EventInfo) (*os.File, os.FileInfo, error) {
-	stat, err := os.Stat(event.Path())
+func (s Sync) getFile(path string) (*os.File, os.FileInfo, error) {
+	stat, err := os.Stat(path)
 	if err != nil {
 		return nil, stat, err
 	}
-	f, err := os.Open(event.Path())
+	f, err := os.Open(path)
 	if err != nil {
 		return nil, stat, err
 	}
@@ -102,58 +122,108 @@ func (s Sync) getFile(event notify.EventInfo) (*os.File, os.FileInfo, error) {
 func (s *Sync) action(event notify.EventInfo) error {
 	switch event.Event() {
 	case notify.Write:
-		return s.Write(event)
+		return s.Write(event.Path())
 	case notify.Create:
-		return s.Create(event)
+		return s.Create(event.Path())
 	case notify.Remove:
-		return s.containerFiler.Delete(s.ToRemotePath(event.Path()))
+		return s.Delete(event.Path())
 	case notify.Rename:
-		return s.Rename(event)
+		return s.Rename(event.Path())
 	}
 	return nil
 }
-func (s *Sync) Write(event notify.EventInfo) error {
-	f, stat, err := s.getFile(event)
+func (s *Sync) Delete(path string) error {
+	if s.swapping {
+		s.swapping = false
+		_, swappedFile := s.isSwapping(path)
+		logger.Warning("File '%s' finished to swap, update sent.", TruncatePath(swappedFile))
+		return s.Write(swappedFile)
+	}
+	return s.containerFiler.Delete(s.ToRemotePath(path))
+}
+func (s *Sync) Write(path string) error {
+	if s.swapping {
+		return nil
+	}
+	f, stat, err := s.getFile(path)
 	if err != nil {
 		return err
 	}
 	return s.containerFiler.CopyContent(f,
 		stat.Size(),
-		s.ToRemotePath(event.Path()),
+		s.ToRemotePath(path),
 		stat.Mode(),
 	)
 }
-func (s *Sync) Create(event notify.EventInfo) error {
-	f, stat, err := s.getFile(event)
+func (s *Sync) Create(path string) error {
+	if s.swapping {
+		return nil
+	}
+	isSwapping, swappingFile := s.isSwapping(path)
+	if isSwapping {
+		s.swapping = true
+		logger.Warning("File '%s' is swapping, next events will be ignored.", TruncatePath(swappingFile))
+		return nil
+	}
+	f, stat, err := s.getFile(path)
 	if err != nil {
 		return err
 	}
 	if stat.IsDir() {
-		return s.containerFiler.CreateFolders(s.targetDir, s.TrimPath(event.Path()))
+		return s.containerFiler.CreateFolders(s.targetDir, s.TrimPath(path))
 	} else {
 		return s.containerFiler.CopyContent(f,
 			stat.Size(),
-			s.ToRemotePath(event.Path()),
+			s.ToRemotePath(path),
 			stat.Mode(),
 		)
 	}
 }
-func (s *Sync) Rename(event notify.EventInfo) error {
-	exists, err := FileExists(event.Path())
+func (s *Sync) Rename(path string) error {
+	if s.swapping {
+		return nil
+	}
+	exists, err := FileExists(path)
 	if err != nil {
 		return err
 	}
-	if s.fileToRenamed == "" && !exists {
-		return s.containerFiler.Delete(s.ToRemotePath(event.Path()))
+	if !exists {
+		isSwapping, swappingFile := s.isSwapping(path)
+		if isSwapping {
+			s.swapping = true
+			logger.Warning("File '%s' is swapping, next events will be ignored.", TruncatePath(swappingFile))
+			return nil
+		}
 	}
-	if s.fileToRenamed == "" {
-		s.fileToRenamed = event.Path()
+	if s.fileToRenamed == "" && !exists {
+		return s.containerFiler.Delete(s.ToRemotePath(path))
+	}
+	if exists {
+		s.fileToRenamed = path
 		return nil
 	}
 	defer func() {
 		s.fileToRenamed = ""
 	}()
-	return s.containerFiler.Rename(s.ToRemotePath(event.Path()), s.ToRemotePath(s.fileToRenamed))
+	return s.containerFiler.Rename(s.ToRemotePath(path), s.ToRemotePath(s.fileToRenamed))
+}
+func (s Sync) isSwapping(path string) (isSwapping bool, pathRenamed string) {
+	return s.isSwappingWithLastState(path, false)
+}
+func (s Sync) isSwappingWithLastState(path string, state bool) (isSwapping bool, pathRenamed string) {
+	pathRenamed = path
+	ext := filepath.Ext(path)
+	if ext == "." {
+		isSwapping = false
+		return
+	}
+	exists, _ := FileExists(path)
+	if exists {
+		isSwapping = state
+		return
+	}
+	tempPath := strings.TrimSuffix(path, ext)
+	return s.isSwappingWithLastState(tempPath + ext[:len(ext) - 1], true)
 }
 func (s Sync) TrimPath(path string) string {
 	path = strings.TrimPrefix(path, s.sourceDir)
