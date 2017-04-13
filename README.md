@@ -9,7 +9,29 @@ This way you only need to modify files inside your local folder to see changes i
 - This plugin was made only for developing purpose, do not use on an app in production (ssh should be disabled in this context)
 - If you run multiple instances of your app only the first instance (index 0) will be altered.
 
-## Installation from release binaries
+## Installation
+
+### Install from plugin repository (recommended)
+NOTE: This installation method requires that your client computer has access to the internet.
+If internet access is not available from client computer use the manual method.
+
+Verify you have a repo named `CF-Community` registered in your cf client.
+
+```
+cf list-plugin-repos
+```
+If the above command does not show `CF-Community` you can add the repo via:
+
+```
+cf add-plugin-repo CF-Community http://plugins.cloudfoundry.org/
+```
+Now that we have the cloud foundry community repo registered, install `sync`:
+
+```
+cf install-plugin -r CF-Community "sync"
+```
+
+### Installation from release binaries
 
 1. Download latest release made for your os here: https://github.com/orange-cloudfoundry/cf-plugin-sync/releases
 2. run `cf install-plugin path/to/previous/binary/downloaded`
