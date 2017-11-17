@@ -53,13 +53,13 @@ OPTIONS:
    --force-sync, -f          Resynchronize files from remote to source even if source folder is not empty.
 ```
 
-## .syncignored
+## .syncignore
 
 you can ignore files and directories from remote app by adding a `.syncignore` in the syle of a `.gitignore` file in source folder (or working directory). 
 
 Example for php-buildpack:
 
-`.syncignored` file:
+`.syncignore` file:
 ```
 /.*
 /httpd
