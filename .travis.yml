@@ -1,9 +1,8 @@
 language: go
 sudo: true
 go:
-- 1.8
+- "1.10"
 install:
-- mkdir $GOPATH/bin
 - curl https://glide.sh/get | sh
 - glide install
 script:
