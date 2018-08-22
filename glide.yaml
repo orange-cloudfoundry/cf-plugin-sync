@@ -1,6 +1,7 @@
 package: github.com/orange-cloudfoundry/cf-plugin-sync
 import:
 - package: code.cloudfoundry.org/cli
+  version: ^v6.38.0
   subpackages:
   - cf/models
   - cf/ssh/options

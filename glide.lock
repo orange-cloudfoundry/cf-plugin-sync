@@ -1,66 +1,119 @@
-hash: f8ec76622ec97f9a2176019f048991c8e2dbcca76f99bb5abbf25e37cf2f2641
-updated: 2017-04-04T03:45:25.559770849+02:00
+hash: b1047ba101822286a651cb66e35725c4b6eff8fb67e8a0b35489c89f07bc2574
+updated: 2018-08-22T14:48:40.007008+02:00
 imports:
+- name: code.cloudfoundry.org/bytefmt
+  version: b31f603f5e1e047fdb38584e1a922dcc5c4de5c8
 - name: code.cloudfoundry.org/cli
-  version: 62896646ffa396fa0bcbe6a1a890dbe1f3c7af88
+  version: 9048c6b553bb90bdd92d4156d7e6a54b82a45e72
   subpackages:
+  - actor/actionerror
+  - api/cloudcontroller/ccerror
+  - api/cloudcontroller/ccv2/constant
+  - api/plugin/pluginerror
+  - api/uaa
+  - api/uaa/constant
+  - api/uaa/internal
   - cf/flags
   - cf/formatters
   - cf/i18n
   - cf/models
-  - cf/resources
   - cf/ssh/options
+  - command/translatableerror
+  - i18n/resources
   - plugin
   - plugin/models
+  - types
+  - util
+  - util/clissh/ssherror
+  - util/configv3
+  - util/download
+  - util/manifest
+  - util/ui
+  - version
 - name: github.com/ArthurHlt/gominlog
   version: 72eebf980f467d3ab3a8b4ddf660f664911ce519
+- name: github.com/blang/semver
+  version: 3c1074078d32d767e08ab2c8564867292da86926
+- name: github.com/bmatcuk/doublestar
+  version: 85a78806aa1b4707d1dbace9be592cf1ece91ab3
+- name: github.com/charlievieth/fs
+  version: 7dc373669fa10ddf827c37c595dee30a2f001be9
 - name: github.com/cheggaaa/pb
-  version: 0817e3a1f8de9e3c78b159699b3c07d53e24a963
+  version: 2af8bbdea9e99e83b3ac400d8f6b6d1b8cbbf338
+- name: github.com/cloudfoundry/bosh-cli
+  version: 14b04789e7bf7c7e2e5ce35dbaf3b52c00bb1569
+  subpackages:
+  - director/template
+- name: github.com/cloudfoundry/bosh-utils
+  version: 407dd7546455f1a0a50feba2dcaef0ae88da1810
+  subpackages:
+  - errors
+  - logger
+  - system
+- name: github.com/cppforlife/go-patch
+  version: 250da0e0e68ce3367b4302f34218f6c064eb9559
+  subpackages:
+  - patch
 - name: github.com/fatih/color
-  version: 42c364ba490082e4815b5222728711b3440603eb
-  repo: https://github.com/fatih/color
+  version: 2d684516a8861da43017284349b7e303e809ac21
 - name: github.com/kr/fs
-  version: 2788f0dbd16903de03cb8186e5c7d97b69ad387b
+  version: 1455def202f6e05b95cc7bfc7e8ae67ae5141eba
+- name: github.com/lunixbochs/vtclean
+  version: 2d01aacdc34a083dca635ba869909f5fc0cd4f41
 - name: github.com/mattn/go-colorable
-  version: d228849504861217f796da67fae4f6e347643f15
-  repo: https://github.com/mattn/go-colorable
+  version: efa589957cd060542a26d2dd7832fd6a6c6c3ade
 - name: github.com/mattn/go-isatty
-  version: 30a891c33c7cde7b02a981314b4228ec99380cca
-  repo: https://github.com/mattn/go-isatty
+  version: 6ca4dbf54d38eea1a992b3c722a76a5d1c4cb25c
 - name: github.com/mattn/go-runewidth
-  version: 14207d285c6c197daabb5c9793d63e7af9ab2d50
-  repo: https://github.com/mattn/go-runewidth
+  version: ce7b0b5c7b45a81508558cd1dba6bb1e4ddb51bb
 - name: github.com/monochromegane/go-gitignore
   version: 38717d0a108ca0e5af632cd6845ca77d45b50729
-- name: github.com/nicksnyder/go-i18n
-  version: f757c9f9b69c16ff69d38dbf224be28a7b6537bb
-  repo: https://github.com/nicksnyder/go-i18n
-  subpackages:
-  - i18n
-  - i18n/bundle
-  - i18n/language
-  - i18n/translation
 - name: github.com/pkg/errors
-  version: ff09b135c25aae272398c51a07235b90a75aa4f0
+  version: 816c9085562cd7ee03e7f8188a1cfd942858cded
 - name: github.com/pkg/sftp
-  version: f581f816668ae3c9aecee151cdaa1afa814a40de
+  version: fe93131e0a925a116ad9296296bb40c3373d69eb
 - name: github.com/rjeczalik/notify
-  version: 41a86457b5eea072a7e6f40bbfaf94c8df41d3aa
+  version: 4e54e7fd043e865c50bda93359fb78813a8d165b
+- name: github.com/SermoDigital/jose
+  version: 803625baeddc3526d01d321b5066029f53eafc81
+  subpackages:
+  - crypto
+  - jws
+  - jwt
+- name: github.com/sirupsen/logrus
+  version: fc587f31c804fe6853cd90f0d8d90af588eca5bd
+- name: github.com/vito/go-interact
+  version: fa338ed9e9ecbb0e9c2e6c7a0160d9fc9b0efbd9
+  subpackages:
+  - interact
+  - interact/terminal
 - name: golang.org/x/crypto
-  version: 459e26527287adbc2adcc5d0d49abff9a5f315a7
+  version: 614d502a4dac94afa3a6ce146bd1736da82514c6
   subpackages:
   - curve25519
   - ed25519
   - ed25519/internal/edwards25519
+  - internal/chacha20
+  - internal/subtle
+  - poly1305
   - ssh
+  - ssh/terminal
 - name: golang.org/x/sys
-  version: d75a52659825e75fff6158388dddc6a5b04f9ba5
-  repo: https://go.googlesource.com/sys
+  version: 3b58ed4ad3395d483fc92d5d14123ce2c3581fec
   subpackages:
   - unix
+  - windows
+- name: golang.org/x/text
+  version: 6e3c4e7365ddcc329f090f96e4348398f6310088
+  subpackages:
+  - internal/language
+  - internal/language/compact
+  - internal/tag
+  - language
+- name: gopkg.in/cheggaaa/pb.v1
+  version: 2af8bbdea9e99e83b3ac400d8f6b6d1b8cbbf338
 - name: gopkg.in/urfave/cli.v1
-  version: 0bdeddeeb0f650497d603c4ad7b20cfe685682f6
+  version: cfb38830724cc34fedffe9a2a29fb54fa9169cd1
 - name: gopkg.in/yaml.v2
-  version: a5b47d31c556af34a302ce5d659e6fea44d90de0
-  repo: https://gopkg.in/yaml.v2
+  version: 5420a8b6744d3b0345ab293f6fcba19c978f1183
 testImports: []

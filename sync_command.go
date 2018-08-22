@@ -1,20 +1,20 @@
 package main
 
 import (
-	"code.cloudfoundry.org/cli/plugin"
-	"encoding/json"
-	"strings"
-	"time"
 	"code.cloudfoundry.org/cli/cf/models"
 	"code.cloudfoundry.org/cli/cf/ssh/options"
-	"os"
-	"gopkg.in/urfave/cli.v1"
+	"code.cloudfoundry.org/cli/plugin"
+	"encoding/json"
 	"errors"
+	"gopkg.in/urfave/cli.v1"
+	"os"
 	"path/filepath"
+	"strings"
+	"time"
 )
 
 const (
-	DEFAULT_SYNC_FOLDER = "sync"
+	DEFAULT_SYNC_FOLDER        = "sync"
 	DEFAULT_ROOT_TARGET_FOLDER = "app"
 )
 
@@ -105,8 +105,6 @@ func (s *SyncCommand) Sync(c *cli.Context) error {
 		keepAliveInterval,
 		models.Application{
 			ApplicationFields: models.ApplicationFields{
-				//must be diego to have ssh works
-				Diego: app.Diego,
 				// guid can be found by doing cf app myapp --guid
 				GUID: app.Guid,
 				// app must be start
@@ -121,13 +119,13 @@ func (s *SyncCommand) Sync(c *cli.Context) error {
 		token,
 	)
 	err = secureShell.Connect(&options.SSHOptions{
-		AppName: appName,
-		SkipHostValidation: sslDisabled,
+		AppName:             appName,
+		SkipHostValidation:  sslDisabled,
 		SkipRemoteExecution: true,
-		Command: []string{},
-		Index: uint(0),
-		ForwardSpecs: []options.ForwardSpec{},
-		TerminalRequest: options.RequestTTYAuto,
+		Command:             []string{},
+		Index:               uint(0),
+		ForwardSpecs:        []options.ForwardSpec{},
+		TerminalRequest:     options.RequestTTYAuto,
 	})
 	if err != nil {
 		return err

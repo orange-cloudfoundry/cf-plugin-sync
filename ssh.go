@@ -21,18 +21,16 @@ import (
 )
 
 const (
-	md5FingerprintLength = 47 // inclusive of space between bytes
-	hexSha1FingerprintLength = 59 // inclusive of space between bytes
+	md5FingerprintLength          = 47 // inclusive of space between bytes
+	hexSha1FingerprintLength      = 59 // inclusive of space between bytes
 	base64Sha256FingerprintLength = 43
 )
-
 
 //go:generate counterfeiter . SecureDialer
 
 type SecureDialer interface {
 	Dial(network, address string, config *ssh.ClientConfig) (*SecureClient, error)
 }
-
 
 //go:generate counterfeiter . ListenerFactory
 
@@ -41,13 +39,13 @@ type ListenerFactory interface {
 }
 
 func NewSecureShell(
-secureDialer SecureDialer,
-listenerFactory ListenerFactory,
-keepAliveInterval time.Duration,
-app models.Application,
-sshEndpointFingerprint string,
-sshEndpoint string,
-token string,
+	secureDialer SecureDialer,
+	listenerFactory ListenerFactory,
+	keepAliveInterval time.Duration,
+	app models.Application,
+	sshEndpointFingerprint string,
+	sshEndpoint string,
+	token string,
 ) *SecureShell {
 	return &SecureShell{
 		secureDialer:      secureDialer,
@@ -72,7 +70,7 @@ type SecureShell struct {
 	secureClient           *SecureClient
 	opts                   *options.SSHOptions
 
-	localListeners         []net.Listener
+	localListeners []net.Listener
 }
 
 func (c *SecureShell) Connect(opts *options.SSHOptions) error {
@@ -200,9 +198,7 @@ func base64Sha256Fingerprint(key ssh.PublicKey) string {
 	return base64.RawStdEncoding.EncodeToString(sum[:])
 }
 
-type hostKeyCallback func(hostname string, remote net.Addr, key ssh.PublicKey) error
-
-func fingerprintCallback(opts *options.SSHOptions, expectedFingerprint string) hostKeyCallback {
+func fingerprintCallback(opts *options.SSHOptions, expectedFingerprint string) ssh.HostKeyCallback {
 	if opts.SkipHostValidation {
 		return nil
 	}
